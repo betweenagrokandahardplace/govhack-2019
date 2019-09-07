@@ -1,0 +1,26 @@
+
+#deps:
+#yum install mysql
+
+#get the tmlink data
+wget "https://opendata.ipdataplatform.com/tmlink-applicants.csv" && \
+wget "https://opendata.ipdataplatform.com/tmlink-applications.csv" && \
+wget "https://opendata.ipdataplatform.com/tmlink-trademark-details.csv" && \
+wget "https://opendata.ipdataplatform.com/tmlink-nice-class.csv"
+
+#mysql conn
+#mysql --user=$db_user --password=$db_password --host=$db_host --port=3306
+
+#rename to remove dashes for easy mysql
+mv tmlink-applicants.csv tmlinkapplicants.csv && \
+mv tmlink-nice-class.csv tmlinkniceclass.csv && \
+mv tmlink-applications.csv tmlinkapplications.csv && \
+mv tmlink-trademark-details.csv tmlinktrademarkdetails.csv
+
+#import all files - note tables should be created
+mysqlimport --local \
+    --compress \
+    --user=$db_user \
+    --password=$db_password \
+    --host=$db_host \
+    --fields-terminated-by=',' govhack tmlink*.csv
